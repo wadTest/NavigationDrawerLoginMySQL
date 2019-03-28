@@ -1,36 +1,72 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <item android:title="ใช้บริการประเมิน">
+        <menu>
+            <item
+                android:id="@+id/nav_camera"
+                android:icon="@drawable/ic_menu_share"
+                android:title="ส่งข้อความแบบย่อ" />
+            <item
+                android:id="@+id/nav_camera1"
+                android:icon="@drawable/ic_menu_send"
+                android:title="ส่งข้อความแบบละเอียด" />
+        </menu>
+    </item>
+
+    <item android:title="Corporete Member">
+        <menu>
+            <item
+                android:id="@+id/nav_gallery"
+                android:icon="@drawable/ic_menu_share"
+                android:title="ประวัติส่งงานประเมิน" />
+            <item
+                android:id="@+id/nav_gallery1"
+                android:icon="@drawable/ic_menu_send"
+                android:title="ส่งงานประเมิน" />
+
+            <item
+                android:id="@+id/nav_gallery2"
+                android:icon="@drawable/ic_menu_send"
+                android:title="ดูงานประเมิน" />
+        </menu>
+    </item>
     <group android:checkableBehavior="single">
-        <item
-            android:id="@+id/nav_camera"
-            android:icon="@drawable/ic_menu_camera"
-            android:title="Import" />
-        <item
-            android:id="@+id/nav_gallery"
-            android:icon="@drawable/ic_menu_gallery"
-            android:title="Gallery" />
+
         <item
             android:id="@+id/nav_slideshow"
             android:icon="@drawable/ic_menu_slideshow"
-            android:title="Slideshow" />
+            android:title="สถานะงาน" />
         <item
             android:id="@+id/nav_manage"
             android:icon="@drawable/ic_menu_manage"
-            android:title="Tools" />
+            android:title="นัดตรวจงวดงาน" />
     </group>
 
-    <item android:title="Communicate">
+    <item android:title="ติดต่อสอบถาม">
         <menu>
             <item
                 android:id="@+id/nav_share"
                 android:icon="@drawable/ic_menu_share"
-                android:title="Share" />
+                android:title="ติดต่อสอบถามทางอีเมล์" />
             <item
                 android:id="@+id/nav_send"
                 android:icon="@drawable/ic_menu_send"
-                android:title="Send" />
+                android:title="ติดต่อทาง@Line" />
+
+            <item
+                android:id="@+id/nav_send1"
+                android:icon="@drawable/ic_menu_send"
+                android:title="ติดต่อสายตรง" />
         </menu>
     </item>
+
+    <group android:checkableBehavior="single">
+
+        <item
+            android:id="@+id/nav_manage00"
+            android:icon="@drawable/ic_menu_manage"
+            android:title="Vedio Edupro" />
+    </group>
 
 </menu>
