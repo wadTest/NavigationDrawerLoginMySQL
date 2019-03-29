@@ -23,10 +23,6 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Created by Maycol Meza on 14/11/2017.
- */
-
 public class LoginActivity extends AppCompatActivity {
     private Button acceder;
     private TextView registrar;
