@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -18,12 +19,15 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.roque.meza.navigationdrawerloginmysql.Utils.UserParcelable;
+
 import org.json.JSONException;
 import org.json.JSONObject;
+
 import java.util.HashMap;
 import java.util.Map;
 
 public class LoginActivity extends AppCompatActivity {
+    //    ประกาศตัวแปร
     private Button acceder;
     private TextView registrar;
     private TextInputEditText email;
@@ -37,22 +41,26 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        email = (TextInputEditText)findViewById(R.id.etusuario);
-        password = (TextInputEditText)findViewById(R.id.etpass);
-        acceder = (Button)findViewById(R.id.btn_acceder);
-        registrar = (TextView)findViewById(R.id.signup);
+//        git event
+        email = (TextInputEditText) findViewById(R.id.etusuario);// email
+        password = (TextInputEditText) findViewById(R.id.etpass);// password
+        acceder = (Button) findViewById(R.id.btn_acceder);//button login
+        registrar = (TextView) findViewById(R.id.signup);// button register
+
         requestQueue = Volley.newRequestQueue(this);
 
+//        เมื่อกดปุ่ม Register
         registrar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent =new Intent(getApplicationContext(),SignupActivity.class);
+                Intent intent = new Intent(getApplicationContext(), SignupActivity.class);
                 startActivity(intent);
                 overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
                 finish();
             }
         });
 
+//        เมื่อกดปุ่ม login
         acceder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -62,40 +70,43 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void iniciar() {
-
+//        เช็คความถูกต้องในการกรอกข้อมูล
         if (!validar()) return;
 
         progreso = new ProgressDialog(this);
-        progreso.setMessage("Iniciando...");
-        progreso.show();
+        progreso.setMessage("รอสักครู่...");
+        progreso.show();// วงกลมหมุนรอ โหลดเสร็จก็จะหายไป
+//        url file php login
         String url = "http://192.168.1.5/movil_database/login_movil.php?";
 
         stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                UserParcelable userParcelable = new UserParcelable();;
-                Log.i("RESPUESTA JSON: ",""+response);
+                UserParcelable userParcelable = new UserParcelable();
+                ;
+                Log.i("RESPUESTA JSON: ", "" + response);
                 try {
                     JSONObject jsonObject = new JSONObject(response);
-                    if(jsonObject.names().get(0).equals("success")){
-                        email.setText("");
-                        password.setText("");
+                    if (jsonObject.names().get(0).equals("สำเร็จ")) {
+                        email.setText("");// email
+                        password.setText("");// password
 
-                        userParcelable.setId(jsonObject.getJSONArray("usuario").getJSONObject(0).getInt("iduser_"));
-                        userParcelable.setEmail(jsonObject.getJSONArray("usuario").getJSONObject(0).getString("email"));
-                        userParcelable.setNombre(jsonObject.getJSONArray("usuario").getJSONObject(0).getString("nombres"));
-                        userParcelable.setImage(jsonObject.getJSONArray("usuario").getJSONObject(0).getString("photo"));
+                        userParcelable.setId(jsonObject.getJSONArray("users").getJSONObject(0).getInt("id"));// id
+                        userParcelable.setEmail(jsonObject.getJSONArray("users").getJSONObject(0).getString("email"));// email
+                        userParcelable.setNombre(jsonObject.getJSONArray("users").getJSONObject(0).getString("name"));// name
+                        userParcelable.setImage(jsonObject.getJSONArray("users").getJSONObject(0).getString("Personal"));// image
 
-                        Toast.makeText(getApplicationContext(),jsonObject.getString("success"),Toast.LENGTH_SHORT).show();
+//                        toaet 5 วิ
+                        Toast.makeText(getApplicationContext(), jsonObject.getString("สำเร็จ"), Toast.LENGTH_SHORT).show();
                         progreso.dismiss();
 
-                        Intent intent = new Intent(getApplicationContext(),MainActivity.class);
-                        intent.putExtra("DATA_USER",userParcelable);
+                        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                        intent.putExtra("DATA_USER", userParcelable);
                         startActivity(intent);
                         finish();
-                    }else{
-                        Toast.makeText(getApplicationContext(),jsonObject.getString("error"),Toast.LENGTH_SHORT).show();
-                        Log.i("RESPUESTA JSON: ",""+jsonObject.getString("error"));
+                    } else {
+                        Toast.makeText(getApplicationContext(), jsonObject.getString("error"), Toast.LENGTH_SHORT).show();
+                        Log.i("RESPUESTA JSON: ", "" + jsonObject.getString("error"));
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -106,19 +117,18 @@ public class LoginActivity extends AppCompatActivity {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Toast.makeText(getApplicationContext(),"No se ha podido conectar",Toast.LENGTH_SHORT).show();
-                progreso.dismiss();
+                Toast.makeText(getApplicationContext(), "ไม่สามารถเชื่อมต่อ", Toast.LENGTH_SHORT).show();
+                progreso.dismiss();//แถบโหลดข้อมูล
             }
         }) {
             @Override
-            protected Map<String, String> getParams() throws AuthFailureError {//para enviar los datos mediante POST
+            protected Map<String, String> getParams() throws AuthFailureError {//เพื่อส่งข้อมูลโดย POST
                 String sEmail = email.getText().toString();
-                String sPassword =  password.getText().toString();
+                String sPassword = password.getText().toString();
 
-                Map<String,String> parametros = new HashMap<>();
-                parametros.put("email",sEmail);
-                parametros.put("password",sPassword);
-                //estos parametros son enviados a nuestro web service
+                Map<String, String> parametros = new HashMap<>();
+                parametros.put("email", sEmail);// email
+                parametros.put("password", sPassword);// password
 
                 return parametros;
             }
@@ -133,15 +143,16 @@ public class LoginActivity extends AppCompatActivity {
         String sEmail = email.getText().toString();
         String sPassword = password.getText().toString();
 
+//        เช็คค่าความว่างเปล่า
         if (sEmail.isEmpty() || !android.util.Patterns.EMAIL_ADDRESS.matcher(sEmail).matches()) {
-            email.setError("Introduzca una dirección de correo electrónico válida");
+            email.setError("ป้อนที่อยู่อีเมลที่ถูกต้อง");
             valid = false;
         } else {
             email.setError(null);
         }
 
         if (sPassword.isEmpty() || password.length() < 4 || password.length() > 10) {
-            password.setError("Entre 4 y 10 caracteres alfanuméricos");
+            password.setError("ระหว่าง 4 ถึง 10 ตัวอักษรและตัวเลข");
             valid = false;
         } else {
             password.setError(null);
@@ -149,5 +160,4 @@ public class LoginActivity extends AppCompatActivity {
 
         return valid;
     }
-
-}
+}//Main Class
