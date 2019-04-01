@@ -32,11 +32,8 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Created by Maycol Meza on 14/11/2017.
- */
-
 public class SignupActivity extends AppCompatActivity {
+//    ประกาศตัวแปร
     private TextView loginLink;
     private ImageView imagePhoto;
     private TextInputEditText password;
@@ -46,7 +43,7 @@ public class SignupActivity extends AppCompatActivity {
     private int request_code = 1;
     private Bitmap bitmap;
     private ProgressDialog progreso;
-    RequestQueue requestQueue; //permitara la conexion directamente del web service
+    RequestQueue requestQueue; //อนุญาตการเชื่อมต่อโดยตรงจากบริการบนเว็บ
     StringRequest stringRequest;
 
     @Override
@@ -54,15 +51,17 @@ public class SignupActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup);
 
-        imagePhoto = (ImageView) findViewById(R.id.usuario_imagen_registro);
-        loginLink = (TextView)findViewById(R.id.link_login);
-        email = (TextInputEditText)findViewById(R.id.correo_registro);
-        password = (TextInputEditText)findViewById(R.id.password_registro);
-        nombre = (TextInputEditText)findViewById(R.id.nombre_registro);
-        registrar = (Button)findViewById(R.id.btn_registro_usuario);
+//        get event
+        imagePhoto = (ImageView) findViewById(R.id.usuario_imagen_registro);//image
+        loginLink = (TextView)findViewById(R.id.link_login);//black login
+        email = (TextInputEditText)findViewById(R.id.correo_registro);//email
+        password = (TextInputEditText)findViewById(R.id.password_registro);//password
+        nombre = (TextInputEditText)findViewById(R.id.nombre_registro);//name
+        registrar = (Button)findViewById(R.id.btn_registro_usuario);//button save data
 
         requestQueue = Volley.newRequestQueue(this);
 
+//        Register sign in
         registrar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -70,13 +69,14 @@ public class SignupActivity extends AppCompatActivity {
             }
         });
 
+//        image upload to mysql
         imagePhoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent i = null;
-                //verificacion de la version de plataforma
+//                การตรวจสอบเวอร์ชันของแพลตฟอร์ม
                 if(Build.VERSION.SDK_INT < 19){
-                    //android 4.3  y anteriores
+//                    android 4.3  y anteriores
                     i = new Intent();
                     i.setAction(Intent.ACTION_GET_CONTENT);
                 }else {
@@ -89,15 +89,16 @@ public class SignupActivity extends AppCompatActivity {
             }
         });
 
-        loginLink.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(),LoginActivity.class);
-                startActivity(intent);
-                overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
-                finish();
-            }
-        });
+//        ลงชื่อแล้วกดย้อนกลับ
+//        loginLink.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Intent intent = new Intent(getApplicationContext(),LoginActivity.class);
+//                startActivity(intent);
+//                overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
+//                finish();
+//            }
+//        });
     }
 
     private void Registrar() {
@@ -193,22 +194,22 @@ public class SignupActivity extends AppCompatActivity {
         String sPassword = password.getText().toString();
         String sEmail = email.getText().toString();
 
-        if (sNombre.isEmpty() || sNombre.length() < 3) {
-            nombre.setError("Ingrese al menos 3 caracteres");
+        if (sNombre.isEmpty() || sNombre.length() < 5) {
+            nombre.setError("กรุณากรอกชื่อให้ถูกต้อง");
             valid = false;
         } else {
             nombre.setError(null);
         }
 
         if (sEmail.isEmpty() || !android.util.Patterns.EMAIL_ADDRESS.matcher(sEmail).matches()) {
-            email.setError("Dirección de correo electrónico no válida");
+            email.setError("ที่อยู่อีเมลไม่ถูกต้อง");
             valid = false;
         } else {
             email.setError(null);
         }
 
-        if (sPassword.isEmpty() || password.length() < 4 || password.length() > 10) {
-            password.setError("Ingrese entre 4 a 10 caracteres alfanuméricos");
+        if (sPassword.isEmpty() || password.length() < 6 || password.length() > 10) {
+            password.setError("ป้อนตัวอักษรและตัวเลขระหว่าง 6 ถึง 10 ตัว");
             valid = false;
         } else {
             password.setError(null);
