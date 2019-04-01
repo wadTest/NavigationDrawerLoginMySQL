@@ -49,7 +49,7 @@ public class SignupActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_signup);
+        setContentView(R.layout.activity_signup);//layout
 
 //        get event
         imagePhoto = (ImageView) findViewById(R.id.usuario_imagen_registro);//image
@@ -73,98 +73,108 @@ public class SignupActivity extends AppCompatActivity {
         imagePhoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = null;
+                Intent i = null;//มีค่าว่างเปล่า
 //                การตรวจสอบเวอร์ชันของแพลตฟอร์ม
                 if(Build.VERSION.SDK_INT < 19){
-//                    android 4.3  y anteriores
+//                    android 4.3  ขึ้นไป
                     i = new Intent();
                     i.setAction(Intent.ACTION_GET_CONTENT);
                 }else {
-                    //android 4.4 y superior
+                    //android 4.4 และดีกว่า
                     i = new Intent(Intent.ACTION_OPEN_DOCUMENT);
                     i.addCategory(Intent.CATEGORY_OPENABLE);
                 }
+//                open file image
                 i.setType("image/*");
                 startActivityForResult(i, request_code);
             }
         });
 
 //        ลงชื่อแล้วกดย้อนกลับ
-//        loginLink.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Intent intent = new Intent(getApplicationContext(),LoginActivity.class);
-//                startActivity(intent);
-//                overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
-//                finish();
-//            }
-//        });
+        loginLink.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(),LoginActivity.class);
+                startActivity(intent);
+                overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
+                finish();
+            }
+        });
     }
 
+//    กรอกข้อมูลที Register แล้วไปเก็บใน mysql
     private void Registrar() {
 
+//        เช็คความถูกต้องในการกรอกข้อมูล
         if (!validar()) return;
 
+//        ส่วนของวงกลม เวลาโหลดจะขึ้นมา หลังจากเสร็จแล้วจะหายไป
         progreso = new ProgressDialog(this);
-        progreso.setMessage("Iniciando...");
+        progreso.setMessage("รอสักครู่...");//ข้อความว่า
         progreso.show();
-        String url = "http://192.168.1.5/movil_database/register_movil.php?";
-
+//        url file php ทีใช้เชื่อมต่อ mysql
+        String url = "http://119.59.103.121/app_mobile/test_sing_in/register_movil.php";
         stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 UserParcelable userParcelable = new UserParcelable();;
-                Log.i("RESPUESTA JSON: ",""+response);
+                Log.i("การตอบสนองของ JSON: ",""+response);
                 try {
                     JSONObject jsonObject = new JSONObject(response);
-                    if(jsonObject.names().get(0).equals("success")){
-                        email.setText("");
-                        nombre.setText("");
-                        password.setText("");
-                        userParcelable.setId(jsonObject.getJSONArray("usuario").getJSONObject(0).getInt("iduser_"));
-                        userParcelable.setEmail(jsonObject.getJSONArray("usuario").getJSONObject(0).getString("email"));
-                        userParcelable.setNombre(jsonObject.getJSONArray("usuario").getJSONObject(0).getString("nombres"));
-                        userParcelable.setImage(jsonObject.getJSONArray("usuario").getJSONObject(0).getString("photo"));
+                    if(jsonObject.names().get(0).equals("ลงทะเบียนสำเร็จ")){
+                        nombre.setText("");// name
+                        email.setText("");// email
+                        password.setText("");// password
 
-                        Toast.makeText(getApplicationContext(),jsonObject.getString("success"),Toast.LENGTH_SHORT).show();
-                        progreso.dismiss();
+//                         ตัวแปรใน php สำคัญต้องตรงกัน
+                        userParcelable.setId(jsonObject.getJSONArray("users").getJSONObject(0).getInt("id"));// id
+                        userParcelable.setNombre(jsonObject.getJSONArray("users").getJSONObject(0).getString("name"));// name
+                        userParcelable.setEmail(jsonObject.getJSONArray("users").getJSONObject(0).getString("email"));// email
+                        userParcelable.setImage(jsonObject.getJSONArray("users").getJSONObject(0).getString("Personal"));//password
 
+//                        toast แสดง 5 วิ
+                        Toast.makeText(getApplicationContext(),jsonObject.getString("สำเร็จ"),Toast.LENGTH_SHORT).show();
+                        progreso.dismiss();// ถ้าไม่เสร็จก้จะขึ้นวงกลมหมุน
+
+//                        จากนั้นก็จะเปิด class MianActivity อัตโนมัติ
                         Intent intent = new Intent(getApplicationContext(),MainActivity.class);
                         intent.putExtra("DATA_USER",userParcelable);
                         startActivity(intent);
-                        finish();
+                        finish();// ไม่รีเทรนค่ากลับ
                     }else{
-                        Toast.makeText(getApplicationContext(),jsonObject.getString("error"),Toast.LENGTH_SHORT).show();
-                        Log.i("RESPUESTA JSON: ",""+jsonObject.getString("error"));
+//                        toast แสดง 5 วิ
+                        Toast.makeText(getApplicationContext(),jsonObject.getString("เกิดข้อผิดพลาด"),Toast.LENGTH_SHORT).show();
+//                        log แสดงข้อผิดพลาด
+                        Log.i("การตอบสนองของ JSON: ",""+jsonObject.getString("เกิดข้อผิดพลาด"));
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
 
-                progreso.dismiss();
+                progreso.dismiss();//วงกลมหมุนจนกว่าจะโหลกเสร็จ
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Toast.makeText(getApplicationContext(),"No se ha podido conectar",Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(),"ไม่สามารถเชื่อมต่อ",Toast.LENGTH_SHORT).show();
                 Log.i("ERROR: ",""+error.toString());
                 progreso.dismiss();
             }
         }){
             @Override
-            protected Map<String, String> getParams() throws AuthFailureError {//para enviar los datos mediante POST
-                String sEmail = email.getText().toString();
-                String sPassword =  password.getText().toString();
-                String sNombre = nombre.getText().toString();
-                String  sImagePhoto = convertirImgString(bitmap);
+            protected Map<String, String> getParams() throws AuthFailureError {//เพื่อส่งข้อมูลโดย POST
+                String sNombre = nombre.getText().toString();// name
+                String sEmail = email.getText().toString();// email
+                String sPassword =  password.getText().toString();// paSSWORD
+                String  sImagePhoto = convertirImgString(bitmap);// image
 
+//                ตัวแปรที่อยู่ file php เชื่อมต่อกับตัวแปร java ที่เป้น string
                 Map<String,String> parametros = new HashMap<>();
+                parametros.put("name",sNombre);
                 parametros.put("email",sEmail);
                 parametros.put("password",sPassword);
-                parametros.put("photo",sImagePhoto);
-                parametros.put("nombres",sNombre);
-                //estos parametros son enviados a nuestro web service
-
+                parametros.put("Personal",sImagePhoto);
+//                พารามิเตอร์เหล่านี้ถูกส่งไปยังบริการเว็บของเรา
                 return parametros;
             }
         };
@@ -172,6 +182,7 @@ public class SignupActivity extends AppCompatActivity {
         requestQueue.add(stringRequest);
     }
 
+//    ส่วนของ image
     private String convertirImgString(Bitmap bitmap) {
 
         String imagenString;
@@ -181,12 +192,13 @@ public class SignupActivity extends AppCompatActivity {
             byte[] imagenByte=array.toByteArray();
             imagenString= Base64.encodeToString(imagenByte,Base64.DEFAULT);
         }else{
-            imagenString = "no imagen"; //se enviara este string en caso de no haber imagen
+            imagenString = "ไม่มีภาพ"; // ข้อความนี้จะถูกส่งในกรณีที่ไม่มีภาพ
         }
-
+//        imagenString
         return imagenString;
     }
 
+//    เช็ึคความถูกต้องในกรอกข้อมูล
     private boolean validar() {
         boolean valid = true;
 
@@ -218,6 +230,7 @@ public class SignupActivity extends AppCompatActivity {
         return valid;
     }
 
+//    การอนุญาตให้เข้าถึงข้อรูปภาพ
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data){
         if(resultCode == RESULT_OK && requestCode == request_code){
