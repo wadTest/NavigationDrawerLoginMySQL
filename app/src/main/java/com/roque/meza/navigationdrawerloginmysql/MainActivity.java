@@ -19,14 +19,18 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.roque.meza.navigationdrawerloginmysql.Utils.UserParcelable;
 
-public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+
+//    ประกาศตัวแปร
     private int ident;
     private UserParcelable user;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+//        toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -38,10 +42,10 @@ public class MainActivity extends AppCompatActivity
             user = bundle.getParcelable("DATA_USER");
             if(bundle!=null){
                 ident = user.getId();
-                ((TextView) header.findViewById(R.id.tv_nombre_user_nav_header)).setText(user.getNombre());
-                ((TextView) header.findViewById(R.id.tv_email_user_nav_header)).setText(user.getEmail());
+                ((TextView) header.findViewById(R.id.tv_nombre_user_nav_header)).setText(user.getNombre());//name
+                ((TextView) header.findViewById(R.id.tv_email_user_nav_header)).setText(user.getEmail());// email
                 if(!user.getImage().equals("sin imagen")){
-                    String url_image = "http://192.168.1.5/movil_database/"+user.getImage();
+                    String url_image = "http://119.59.103.121/app_mobile/test_sing_in/"+user.getImage();
                     url_image = url_image.replace(" ","%20");
                     try {
                         Log.i("RESPUESTA IMAGE: ",""+url_image);
@@ -54,6 +58,7 @@ public class MainActivity extends AppCompatActivity
         }catch (Exception e){
             e.printStackTrace();
         }
+
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {

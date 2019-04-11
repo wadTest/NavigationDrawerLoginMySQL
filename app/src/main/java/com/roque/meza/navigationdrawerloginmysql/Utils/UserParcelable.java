@@ -3,10 +3,6 @@ package com.roque.meza.navigationdrawerloginmysql.Utils;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-/**
- * Created by Maycol Meza on 14/11/2017.
- */
-
 public class UserParcelable implements Parcelable {
     private int id;
     private String email;

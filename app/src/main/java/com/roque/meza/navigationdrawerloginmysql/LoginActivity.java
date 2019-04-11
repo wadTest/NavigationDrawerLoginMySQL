@@ -77,7 +77,7 @@ public class LoginActivity extends AppCompatActivity {
         progreso.setMessage("รอสักครู่...");
         progreso.show();// วงกลมหมุนรอ โหลดเสร็จก็จะหายไป
 //        url file php login
-        String url = "http://192.168.1.5/movil_database/login_movil.php?";
+        String url = "http://119.59.103.121/app_mobile/test_sing_in/login_movil.php";
 
         stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
             @Override

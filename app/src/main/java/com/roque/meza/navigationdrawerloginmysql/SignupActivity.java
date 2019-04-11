@@ -220,7 +220,7 @@ public class SignupActivity extends AppCompatActivity {
             email.setError(null);
         }
 
-        if (sPassword.isEmpty() || password.length() < 6 || password.length() > 10) {
+        if (sPassword.isEmpty() || password.length() < 4 || password.length() > 10) {
             password.setError("ป้อนตัวอักษรและตัวเลขระหว่าง 6 ถึง 10 ตัว");
             valid = false;
         } else {
